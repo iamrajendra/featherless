@@ -1,0 +1,2 @@
+include ':app', ':feathers-android'
+project(':feathers-android').projectDir = new File('feathers-android-master')
