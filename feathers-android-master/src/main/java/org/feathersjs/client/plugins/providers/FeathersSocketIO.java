@@ -6,6 +6,7 @@ public class FeathersSocketIO extends IProviderConfiguration {
 
     public static class Options extends IO.Options {
 //        public String baseUrl;
+
     }
 
     private final Options mOptions;
@@ -16,5 +17,6 @@ public class FeathersSocketIO extends IProviderConfiguration {
 
     public FeathersSocketIO() {
         mOptions = new Options();
+
     }
 }

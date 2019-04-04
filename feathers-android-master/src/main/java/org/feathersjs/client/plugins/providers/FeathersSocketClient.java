@@ -34,7 +34,7 @@ import org.feathersjs.client.service.FeathersService.FeathersCallback;
 
 public class FeathersSocketClient extends FeathersBaseClient {
 
-    private final String TAG = "feathers-socket";
+    private final String TAG = FeathersSocketClient.class.getSimpleName();
     private FeathersSocketIO.Options mOptions = new FeathersSocketIO.Options();
     private Socket mSocket;
 
@@ -60,18 +60,18 @@ public class FeathersSocketClient extends FeathersBaseClient {
         try {
             mSocket = IO.socket(mFeathers.getBaseUrl(), opts);
         } catch (URISyntaxException exception) {
-            Log.e("FeathersSocket", "Error parsing URL", exception);
+            Log.e(TAG, "Error parsing URL", exception);
         }
 
         mSocket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                Log.d("SOCKET:", "Connected at " + mFeathers.getBaseUrl() + "|");
+                Log.d(TAG, "Connected at " + mFeathers.getBaseUrl() + "|");
             }
         }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                Log.d("SOCKET:", "Disconnected");
+                Log.d(TAG, "Disconnected");
             }
         }).on("unauthorized", new Emitter.Listener() {
             @Override
@@ -82,6 +82,49 @@ public class FeathersSocketClient extends FeathersBaseClient {
             @Override
             public void call(Object... args) {
                 Log.d("SOCKET:", "authenticated");
+            }
+        })
+
+        .on(Socket.EVENT_RECONNECTING, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                Log.i(TAG, "call: RECONNECTING");
+
+            }
+        }).on("event", new Emitter.Listener() {
+
+            @Override
+            public void call(Object... args) {
+
+            }
+
+        }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
+
+            @Override
+            public void call(Object... args) {
+                Log.i(TAG, "call: DISCONNECT");
+            }
+
+        }).on(Socket.EVENT_CONNECT_ERROR, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                Log.e(TAG, "call: CONNECT ERROR" + args[0]);
+            }
+        }).on(Socket.EVENT_CONNECT_TIMEOUT, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                Log.e(TAG, "call: CONNECT TIME OUT");
+
+            }
+        }).on(Socket.EVENT_ERROR, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                Log.e(TAG, "call: ERROR");
+            }
+        }).on(Socket.EVENT_RECONNECT_ERROR, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                Log.e(TAG, "call: RECONNECT ERROR");
             }
         });
         mSocket.connect();
